@@ -6,31 +6,31 @@ app.use(logger);
 
 
 app.get("/books",(req,res)=>{
-    return res.send({ route: "/books",permission: req.true})
+    return res.send({ route: "/books"})
 });
 
 app.get("/libraries",checkPermission("libraries"),(req,res)=>{
-    return res.send({ route: "/libraries", permission: req.true}
+    return res.send({ route: "/libraries", permission: req.permission}
     
     )
 })
 
 app.get("/authors",checkPermission("authors"),(req,res)=>{
-    return res.send({ route: "/authors", permission: req.true}
+    return res.send({ route: "/authors", permission: req.permission}
 
     )
 });
 
 function checkPermission(user){
 return function logger(req,res,next){
-    if(user=="libraries"){
-        return next();
+    if(user=="libraries" || user =="authors"){
+        req.permission = true;
         
     }
-    else if(user=="authors"){
-        return next();
+    else {
+        req.permission = "Not allowed"
     }
-    return res.send("Not allowed");
+  next();
 }
 }
 
