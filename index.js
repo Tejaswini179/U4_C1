@@ -3,31 +3,31 @@ const express =require("express");
 const app = express();
 
 app.use(logger);
-app.use(checkPermission);
+
 
 app.get("/books",(req,res)=>{
-    return res.send({ route: "/books"})
+    return res.send({ route: "/books",permission: req.true})
 });
 
-app.get("/libraries",(req,res)=>{
+app.get("/libraries",checkPermission("libraries"),(req,res)=>{
     return res.send({ route: "/libraries", permission: req.true}
     
     )
 })
 
-app.get("/authors",(req,res)=>{
+app.get("/authors",checkPermission("authors"),(req,res)=>{
     return res.send({ route: "/authors", permission: req.true}
 
     )
 });
 
-function checkPermission(permission){
+function checkPermission(user){
 return function logger(req,res,next){
-    if(permission=="libraries"){
+    if(user=="libraries"){
         return next();
         
     }
-    else if(permission=="authors"){
+    else if(user=="authors"){
         return next();
     }
     return res.send("Not allowed");
